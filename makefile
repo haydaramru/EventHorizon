@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -g -pthread
 
-STRUCTS = shared/structs.c
+SHARED_SRCS = shared/structs.c shared/structured_log.c shared/session.c
 
 TELNET_TARGET = bin/telnet_pit
 UPNP_TARGET = bin/upnp_pit
@@ -22,16 +22,16 @@ BIN_DIR = bin
 # Default Rule
 all: $(TELNET_TARGET) $(UPNP_TARGET) $(MQTT_TARGET) $(COAP_TARGET) $(GO_TARGET)
 
-$(TELNET_TARGET): $(TELNET_SRC) $(STRUCTS) | $(BIN_DIR)
+$(TELNET_TARGET): $(TELNET_SRC) $(SHARED_SRCS) | $(BIN_DIR)
 	$(CC) $(CFLAGS) -o $@ $^ 
 
-$(UPNP_TARGET): $(UPNP_SRC) $(STRUCTS) | $(BIN_DIR)
+$(UPNP_TARGET): $(UPNP_SRC) $(SHARED_SRCS) | $(BIN_DIR)
 	$(CC) $(CFLAGS) -o $@ $^ 
 
-$(MQTT_TARGET): $(MQTT_SRC) $(STRUCTS) | $(BIN_DIR)
+$(MQTT_TARGET): $(MQTT_SRC) $(SHARED_SRCS) | $(BIN_DIR)
 	$(CC) $(CFLAGS) -o $@ $^ 
 
-$(COAP_TARGET): $(COAP_SRC) $(STRUCTS) | $(BIN_DIR)
+$(COAP_TARGET): $(COAP_SRC) $(SHARED_SRCS) | $(BIN_DIR)
 	$(CC) $(CFLAGS) -o $@ $^ 
 
 $(GO_TARGET): $(GO_SRCS) | $(BIN_DIR)
@@ -48,6 +48,6 @@ coap_pit:	$(COAP_TARGET)
 prometheus: $(GO_TARGET)
 
 clean:
-	rm -f $(TELNET_TARGET) $(UPNP_TARGET) $(MQTT_TARGET) $(GO_TARGET)
+	rm -f $(TELNET_TARGET) $(UPNP_TARGET) $(MQTT_TARGET) $(COAP_TARGET) $(GO_TARGET)
 
 .PHONY: all clean
