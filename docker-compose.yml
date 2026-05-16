@@ -20,6 +20,10 @@ services:
       - ${TELNET_PORT}:${TELNET_PORT}
     volumes:
       - tarpit-sock:/tmp  # Share socket with prometheus-exporter
+      - eventhorizon-logs:/var/log/eventhorizon
+    environment:
+      - EVENTHORIZON_MODE=${EVENTHORIZON_MODE:-baseline}
+      - EVENTHORIZON_LOG_PATH=/var/log/eventhorizon/eventhorizon.jsonl
     ulimits:
       nofile:
         soft: "${TELNET_MAX_NO_CLIENTS}"
@@ -112,6 +116,17 @@ services:
     environment:
     - GF_LOG_LEVEL=warn
 
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    volumes:
+      - ./otel-poc/config.yaml:/etc/otelcol/config.yaml:ro
+      - eventhorizon-logs:/var/log/eventhorizon:ro
+    command: ["--config=/etc/otelcol/config.yaml"]
+    depends_on:
+      - telnet_pit
+
 volumes:
   grafana-storage:
   tarpit-sock:
+  eventhorizon-logs:
