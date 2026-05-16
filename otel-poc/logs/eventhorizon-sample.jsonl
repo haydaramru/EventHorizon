@@ -1,0 +1,3 @@
+{"ts":"2026-05-18T09:00:00.000Z","event_type":"connect","protocol":"telnet","session_id":"telnet-198.51.100.23-1716022800000","source_ip":"198.51.100.23","mode":"baseline","persona":"none","strategy":"none"}
+{"ts":"2026-05-18T09:00:01.000Z","event_type":"deception_applied","protocol":"telnet","session_id":"telnet-203.0.113.10-1716022801000","source_ip":"203.0.113.10","mode":"deception","persona":"generic_iot_camera","strategy":"camouflage_graduated","delay_ms":100}
+{"ts":"2026-05-18T09:00:08.000Z","event_type":"disconnect","protocol":"telnet","session_id":"telnet-198.51.100.23-1716022800000","source_ip":"198.51.100.23","mode":"baseline","persona":"none","strategy":"none","duration_ms":8000,"disconnect_reason":"write_error"}
