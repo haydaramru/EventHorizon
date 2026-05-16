@@ -20,6 +20,8 @@ struct baseClient {
 struct telnetAndUpnpClient {
     struct baseClient base;
     int fd;
+    char session_id[128];
+    long long started_at_ms;
 };
 
 struct coapClient {

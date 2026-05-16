@@ -12,6 +12,8 @@
 #include <signal.h>
 #include <time.h>
 #include "../shared/structs.h"
+#include "../shared/session.h"
+#include "../shared/structured_log.h"
 
 // #define PORT 23
 // #define DELAY_MS 100
@@ -28,6 +30,7 @@
 int port;
 int delay;
 int maxNoClients;
+const char *eventhorizonMode = "baseline";
 
 // Telnet negotiation options
 unsigned char negotiations[][3] = {
@@ -51,6 +54,39 @@ void initializeStats(){
     statsTelnet.mostConcurrentConnections = 0;
 }
 
+int deceptionDelayMs(long long timeConnectedMs) {
+    int delayMs = delay + (int)(timeConnectedMs / 10000);
+    int maxDelayMs = delay + 250;
+
+    if (delayMs > maxDelayMs) {
+        return maxDelayMs;
+    }
+    return delayMs;
+}
+
+void logTelnetDisconnect(struct telnetAndUpnpClient *client, long long now, const char *reason) {
+    long long durationMs = -1;
+
+    if (client->started_at_ms > 0 && now >= client->started_at_ms) {
+        durationMs = now - client->started_at_ms;
+    } else if (client->base.timeConnected >= 0) {
+        durationMs = client->base.timeConnected;
+    }
+
+    structured_log_event(
+        "disconnect",
+        "telnet",
+        client->session_id,
+        client->base.ipaddr,
+        eventhorizonMode,
+        "none",
+        "none",
+        durationMs,
+        reason ? reason : "unknown",
+        -1
+    );
+}
+
 int main(int argc, char *argv[]) {
     setbuf(stdout, NULL);
     
@@ -64,6 +100,11 @@ int main(int argc, char *argv[]) {
     port = atoi(argv[1]);
     delay = atoi(argv[2]);
     maxNoClients = atoi(argv[3]);
+    const char *configuredMode = getenv("EVENTHORIZON_MODE");
+    if (configuredMode && strcmp(configuredMode, "deception") == 0) {
+        eventhorizonMode = "deception";
+    }
+    structured_log_init(NULL);
     initializeStats();
     setFdLimit(maxNoClients);
     signal(SIGPIPE, SIG_IGN); // Ignore 
@@ -115,6 +156,7 @@ int main(int argc, char *argv[]) {
                             SERVER_ID, c->base.ipaddr, timeTrapped);
                         printf("%s", msg);
                         sendMetric(msg);
+                        logTelnetDisconnect(c, now, "write_error");
                         close(c->fd);
                         free(c);
                     }
@@ -155,9 +197,18 @@ int main(int argc, char *argv[]) {
 
             statsTelnet.totalConnects += 1;
             newClient->fd = clientFd;
+            newClient->base.type = TELNET_CLIENT;
             newClient->base.sendNext = now + delay;
             newClient->base.timeConnected = 0;
             snprintf(newClient->base.ipaddr, INET_ADDRSTRLEN, "%s", inet_ntoa(clientAddr.sin_addr));
+            newClient->started_at_ms = now;
+            make_session_id(
+                newClient->session_id,
+                sizeof(newClient->session_id),
+                "telnet",
+                newClient->base.ipaddr,
+                newClient->started_at_ms
+            );
             queue_append(&clientQueueTelnet, (struct baseClient*)newClient);
 
             if(statsTelnet.mostConcurrentConnections < clientQueueTelnet.length) {
@@ -169,6 +220,34 @@ int main(int argc, char *argv[]) {
                 SERVER_ID, newClient->base.ipaddr);
             printf("%s", msg);
             sendMetric(msg);
+
+            structured_log_event(
+                "connect",
+                "telnet",
+                newClient->session_id,
+                newClient->base.ipaddr,
+                eventhorizonMode,
+                "none",
+                "none",
+                -1,
+                NULL,
+                -1
+            );
+
+            if (strcmp(eventhorizonMode, "deception") == 0) {
+                structured_log_event(
+                    "deception_applied",
+                    "telnet",
+                    newClient->session_id,
+                    newClient->base.ipaddr,
+                    eventhorizonMode,
+                    "generic_iot_camera",
+                    "camouflage_graduated",
+                    -1,
+                    NULL,
+                    deceptionDelayMs(0)
+                );
+            }
         }
     }
 
