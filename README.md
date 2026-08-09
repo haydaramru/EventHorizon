@@ -5,6 +5,15 @@ It provides a modular, containerized environment where each protocol emulator ru
 and all telemetry data is collected and visualized through a Prometheus + Grafana stack.
 
 ### 🌌 Why the name *EventHorizon*?
+<a href="https://en.wikipedia.org/wiki/Optical_illusion">   
+<img 
+  src="https://raw.github.com/haydaramru/EventHorizon/GSoC_2026/EventHorizon.gif" 
+  alt="Event Horizon depiction"
+  style="margin-top:20px;margin-right:12px"
+  align="left" 
+  height="255px"
+/>
+</a>
 In astrophysics, the *event horizon* is the boundary around a black hole beyond which nothing can escape.  
 Similarly, the **EventHorizon** framework acts as a boundary for malicious network activity:  
 once an automated scanner crosses into it, the connection cannot progress or escape—it becomes trapped indefinitely.  
