@@ -7,7 +7,7 @@ and all telemetry data is collected and visualized through a Prometheus + Grafan
 ### 🌌 Why the name *EventHorizon*?
 <a href="https://en.wikipedia.org/wiki/Optical_illusion">   
 <img 
-  src="https://raw.github.com/haydaramru/EventHorizon/GSoC_2026/EventHorizon.gif" 
+  src="https://raw.github.com/haydaramru/EventHorizon/GSoC_2026/black-hole.gif" 
   alt="Event Horizon depiction"
   style="margin-top:20px;margin-right:12px"
   align="left" 
