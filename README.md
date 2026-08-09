@@ -9,11 +9,12 @@ and all telemetry data is collected and visualized through a Prometheus + Grafan
 <img 
   src="https://raw.github.com/haydaramru/EventHorizon/GSoC_2026/black-hole.gif" 
   alt="Event Horizon depiction"
-  style="margin-top:20px;margin-right:12px"
+  style="margin-top:20px;margin-right:20px"
   align="left" 
-  height="255px"
+  height="200px"
 />
 </a>
+&nbsp;&nbsp;&nbsp;
 In astrophysics, the *event horizon* is the boundary around a black hole beyond which nothing can escape.  
 Similarly, the **EventHorizon** framework acts as a boundary for malicious network activity:  
 once an automated scanner crosses into it, the connection cannot progress or escape—it becomes trapped indefinitely.  
