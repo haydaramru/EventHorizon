@@ -10,7 +10,7 @@ and all telemetry data is collected and visualized through a Prometheus + Grafan
   <tr>
     <td width="30%" align="center">
       <a href="https://en.wikipedia.org/wiki/Event_horizon">
-        <img src="https://raw.githubusercontent.com/haydaramru/EventHorizon/GSoC_2026/black-hole.gif" alt="Event Horizon depiction" width="200px" />
+        <img src="https://raw.githubusercontent.com/haydaramru/EventHorizon/GSoC_2026/black-hole.gif" alt="Event Horizon depiction" width="250px" />
       </a>
     </td>
     <td width="70%">
